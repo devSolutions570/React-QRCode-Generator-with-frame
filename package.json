@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "csvjson": "^5.1.0",
+    "file-saver": "^2.0.2",
     "fs2": "^0.3.8",
     "merge-images": "^2.0.0",
     "qrcode": "^1.4.4",
@@ -14,11 +15,14 @@
     "qrcode-react": "^0.1.16",
     "react": "^16.13.1",
     "react-csv": "^2.0.3",
+    "react-data-export": "^0.6.0",
     "react-dom": "^16.13.1",
     "react-image": "^4.0.3",
+    "react-json-excel": "^1.1.0",
     "react-papaparse": "^3.7.3",
     "react-qrcode": "^0.2.5",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "xlsx": "^0.16.6"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -7,82 +7,78 @@ import { CSVLink } from "react-csv";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import ReactExport from "react-data-export";
+var _ = require("lodash");
 
 function App() {
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-
-  const multiDataSet = [
-    {
-      columns: [
-        { title: "Headings", width: { wpx: 80 } }, //pixels width
-        { title: "Text Style", width: { wch: 40 } }, //char width
-        { title: "Colors", width: { wpx: 90 } },
-      ],
-      data: [
-        [
-          { value: "H1", style: { font: { sz: "24", bold: true } } },
-          { value: "Bold", style: { font: { bold: true } } },
-          {
-            value: "Red",
-            style: {
-              fill: { patternType: "solid", fgColor: { rgb: "FFFF0000" } },
-            },
-          },
-        ],
-        [
-          { value: "H2", style: { font: { sz: "18", bold: true } } },
-          { value: "underline", style: { font: { underline: true } } },
-          {
-            value: "Blue",
-            style: {
-              fill: { patternType: "solid", fgColor: { rgb: "FF0000FF" } },
-            },
-          },
-        ],
-        [
-          { value: "H3", style: { font: { sz: "14", bold: true } } },
-          { value: "italic", style: { font: { italic: true } } },
-          {
-            value: "Green",
-            style: {
-              fill: { patternType: "solid", fgColor: { rgb: "FF00FF00" } },
-            },
-          },
-        ],
-        [
-          { value: "H4", style: { font: { sz: "12", bold: true } } },
-          { value: "strike", style: { font: { strike: true } } },
-          {
-            value: "Orange",
-            style: {
-              fill: { patternType: "solid", fgColor: { rgb: "FFF86B00" } },
-            },
-          },
-        ],
-        [
-          { value: "H5", style: { font: { sz: "10.5", bold: true } } },
-          { value: "outline", style: { font: { outline: true } } },
-          {
-            value: "Yellow",
-            style: {
-              fill: { patternType: "solid", fgColor: { rgb: "FFFFFF00" } },
-            },
-          },
-        ],
-        [
-          { value: "H6", style: { font: { sz: "7.5", bold: true } } },
-          { value: "shadow", style: { font: { shadow: true } } },
-          {
-            value: "Light Blue",
-            style: {
-              fill: { patternType: "solid", fgColor: { rgb: "FFCCEEFF" } },
-            },
-          },
-        ],
-      ],
-    },
-  ];
+  const baseData = {
+    aboutUs: "sss",
+    activated: true,
+    agentType: "restaurant",
+    assignTo: "Jenny Wang",
+    botResponse: [
+      "What would you like? Here is our e-menu. Please list the item number on the menu, the size of entree, quantity, and any special requirements for the order. For example, #2 one small size of fish and chip; #10 one small garden salad (no cheese); #12 one medium drink (diet coke).",
+      "Thanks! Please review the order. If everything looks good, please confirm the order. ",
+      "Thank you! We will let you know when the order is ready. Usually, it takes about 30 minutes to get an order ready.",
+      "Sorry, we don't have delivery service now. Do you want to order to pickup?",
+      "It is my pleasure to serve you!",
+    ],
+    businessAddress: "sss",
+    businessName: "sss",
+    clientID: "ZUnZRmjRgTaYm5or36ZAhhygkh03",
+    contactPersonEmail: "sss@gmail.com",
+    contactPersonName: "sss",
+    createdDate: "09-02-2020 6:43 PM",
+    detailLocation: "sss",
+    detailServiceLocation: "sss",
+    greetings: "sss",
+    isCreated: true,
+    issues: ["I want to place an order", "ss", "ssss"],
+    knowledgeBase: [
+      {
+        followUp: "",
+        isDefault: true,
+        needResponse: true,
+        option: "I want to place an order",
+        rank: "1",
+        response: "Ok. For Pickup or delivery?",
+        responseType: "Multiple choices",
+      },
+      {
+        followUp: "",
+        followUpNo: "unagree",
+        followUpYes: "agree",
+        needResponse: true,
+        option: "ss",
+        rank: "2",
+        response: "ssss",
+        responseType: "Multiple choices",
+      },
+      {
+        followUp: "",
+        followUpNo: "no",
+        followUpYes: "okay",
+        needResponse: true,
+        option: "ssss",
+        rank: "3",
+        response: "sssss",
+        responseType: "Multiple choices",
+      },
+    ],
+    lat: 35.301055908203125,
+    location: "sss",
+    long: -120.66622362474077,
+    modelName: "Restaurant service AI",
+    name: "sss",
+    objectDescription: "sss",
+    orderTypes: { delivery: false, dineIn: false, pickup: false },
+    title: "sss",
+    type: "Mobile",
+    updatedDate: "09-03-2020 5:20 AM",
+    website: "sss",
+  };
+  const [multiDataSet, setmultiDataSet] = React.useState([]);
   // const csvData = csvjson.toCSV(
   const csvData = [
     {
@@ -100,11 +96,8 @@ function App() {
       detailLocation: "hh",
       detailServiceLocation: "hh",
       greetings: "hh",
-      image: [
-        "https://firebasestorage.googleapis.com/v0/b/piecod…=media&token=6c14d9c3-caaf-4e3a-bad2-1bd69440127c",
-      ],
       isCreated: true,
-      issues: [("hh", "hh", "hh")],
+      issues: ["hh", "hh", "hh"],
       knowledgeBase: [""],
       lat: 35.301055908203125,
       location: "hh",
@@ -166,6 +159,95 @@ function App() {
     FileSaver.saveAs(data, fileName + fileExtension);
   };
 
+  function keyParse(baseDataParam, mainKey) {
+    let keyResults = [];
+
+    if (_.isArray(baseDataParam[mainKey])) {
+      let subKeys = _.keys(baseDataParam[mainKey]);
+      let arrayKeyResults = [];
+      subKeys.forEach((key, value) => {
+        if (_.isObject(baseDataParam[mainKey][key])) {
+          arrayKeyResults = _.concat(
+            arrayKeyResults,
+            keyParse(baseDataParam[mainKey], key)
+          );
+        } else {
+          arrayKeyResults.push(key);
+        }
+      });
+      arrayKeyResults.forEach((key, value) => {
+        keyResults.push(mainKey + "/" + key);
+      });
+    } else if (_.isObject(baseDataParam[mainKey])) {
+      let subKeys = _.keys(baseDataParam[mainKey]);
+
+      subKeys.forEach((key, value) => {
+        keyResults.push(mainKey + "/" + key);
+      });
+    } else {
+      keyResults.push(mainKey);
+    }
+    return keyResults;
+  }
+
+  function makeKeyArrays() {
+    let DataSet = [];
+    let xlsxColumes = [];
+    let xlsxInitData = [];
+    let machineKeys = _.keys(baseData);
+    let kenLen = 0;
+    machineKeys.forEach((key) => {
+      let keyResult = keyParse(baseData, key);
+      kenLen += keyResult.length;
+      keyResult.forEach((key, value) => {
+        xlsxColumes.push({
+          title: key,
+          width: { wch: key.length + 2 },
+          style: {
+            fill: { patternType: "solid", fgColor: { rgb: "dedede" } },
+            border: {
+              top: { style: "thin", color: { auto: 1 } },
+              right: { style: "thin", color: { auto: 1 } },
+              bottom: { style: "thin", color: { auto: 1 } },
+              left: { style: "thin", color: { auto: 1 } },
+            },
+            alignment: {
+              vertical: "center",
+              horizontal: "center",
+              wrapText: false,
+            },
+            locked: true,
+          },
+        });
+      });
+    });
+
+    let testValues = _.flatMap(baseData, (nameObj) => {
+      if (_.isArray(nameObj)) {
+        return _.values(nameObj).map((value) => {
+          if (_.isObject(value)) {
+            return _.values(value);
+          }
+          return value;
+        });
+      } else if (_.isObject(nameObj)) {
+        return _.values(nameObj);
+      } else {
+        return nameObj;
+      }
+    });
+    let valueResuts = _.flatten(testValues);
+
+    for (let i = 0; i < valueResuts.length; i++) {
+      xlsxInitData.push({
+        value: valueResuts[i],
+      });
+    }
+
+    DataSet.push({ columns: xlsxColumes, data: [xlsxInitData] });
+    setmultiDataSet(DataSet);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -189,10 +271,9 @@ function App() {
         >
           Download me
         </CSVLink> */}
-        <button onClick={() => exportToCSV(csvData, "testExcel")}>
-          {/* <button onClick={() => simulateClick()}> */}
-          xlsx download butoon
-        </button>
+        {/* <button onClick={() => exportToCSV(csvData, "testExcel")}> */}
+        {/* <button onClick={() => simulateClick()}> */}
+        <button onClick={() => makeKeyArrays()}>xlsx download butoon</button>
         <ExcelFile element={<button>Download Data With Styles</button>}>
           <ExcelSheet dataSet={multiDataSet} name="Organization" />
         </ExcelFile>
